@@ -1,4 +1,3 @@
-#always install this library
 library("tidyverse")
 
 #machine learning package
@@ -7,7 +6,7 @@ train <- read_csv("train_V2.csv") # reads in files
 #creates sample - set.seed means same random sample used every time code runs
 train <- na.omit(train)
 set.seed(1234)
-data_sample <- sample_n(train, 4440000)
+data_sample <- sample_n(train, 10^6)
 
 
 #method to deterine whether player is in top half or not boolean function
@@ -55,3 +54,19 @@ results
 
 err <- mean(as.numeric(pred> 0.5) != test_label)
 err
+
+results <- results %>%
+  mutate(
+    true_pos = case_when(prediction == TRUE & test_label == TRUE ~1, TRUE ~ 0),
+    false_pos = case_when(prediction == TRUE & test_label == FALSE ~1, TRUE ~ 0),
+    false_neg = case_when(prediction == FALSE & test_label == TRUE ~1, TRUE ~ 0),
+    # correct_pred = case_when(prediction == test_label ~ 1, TRUE ~ 0)
+  )
+
+accuracy <- sum(results$correct_pred)/nrow(results)
+
+precision <- sum(results$true_pos)/(sum(results$true_pos) + sum(results$false_pos))
+
+recall <- sum(results$true_pos)/(sum(results$true_pos) + sum(results$false_neg))
+
+f1 <- 2*(precision * recall)/(precision + recall)

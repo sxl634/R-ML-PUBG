@@ -28,7 +28,7 @@ split <- round(nrow(data_sample) * 0.7)
 training_data <- data_sample[1:split,]
 test_data <- data_sample[-(1:split),]
 
-model <- randomForest(top50 ~ ., data = training_data, nodesize = 50, ntree = 50)
+model <- randomForest(top50 ~ ., data = training_data, nodesize = 20, ntree = 20)
 model
 predict <- predict(model, newdata = test_data)
 predict
